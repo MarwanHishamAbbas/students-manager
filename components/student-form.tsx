@@ -45,8 +45,6 @@ export default function StudentForm() {
     try {
       setIsSubmitting(true);
       await addStudent(data);
-      // router.push("/students");
-    //   router.refresh();
     }
     catch (error) {
       console.error("Failed to add student:", error);

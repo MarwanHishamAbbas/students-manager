@@ -1,7 +1,5 @@
 import Database from "better-sqlite3";
 
-import type { StudentFormValues } from "@/components/student-form";
-
 // Initialize the database
 let db: Database.Database;
 
@@ -60,63 +58,6 @@ function initDB() {
   `);
 
   // Insert sample activities
-}
-
-// Get all students
-export async function getStudents() {
-  const db = getDB();
-  return db.prepare("SELECT * FROM students ORDER BY firstName").all() as StudentFormValues[];
-}
-
-// Get student by ID
-export async function getStudentById(id: string) {
-  const db = getDB();
-  return db.prepare("SELECT * FROM students WHERE id = ?").get(id);
-}
-
-// Get students by class (grade and section)
-export async function getStudentsByClass(grade: string, section: string) {
-  const db = getDB();
-  return db.prepare("SELECT * FROM students WHERE grade = ? AND section = ? ORDER BY firstName").all(grade, section);
-}
-
-// Get student count
-export async function getStudentCount() {
-  const db = getDB();
-  const result = db.prepare("SELECT COUNT(*) as count FROM students").get() as { count: number };
-  return result.count;
-}
-
-// Get class count (unique grade-section combinations)
-export async function getClassCount() {
-  const db = getDB();
-  const result = db.prepare("SELECT COUNT(DISTINCT grade || '-' || section) as count FROM students").get() as {
-    count: number;
-  };
-  return result.count;
-}
-
-// Get attendance rate (percentage of present students)
-export async function getAttendanceRate() {
-  const db = getDB();
-  const result = db
-    .prepare(`
-    SELECT 
-      CASE 
-        WHEN COUNT(*) = 0 THEN 100
-        ELSE ROUND((SUM(isPresent) * 100.0) / COUNT(*), 1)
-      END as rate
-    FROM attendance
-  `)
-    .get() as { rate: number };
-
-  return result.rate;
-}
-
-// Get recent activities
-export async function getRecentActivities() {
-  const db = getDB();
-  return db.prepare("SELECT * FROM activities ORDER BY timestamp DESC LIMIT 5").all();
 }
 
 export default getDB;
