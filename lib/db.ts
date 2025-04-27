@@ -1,4 +1,6 @@
 import Database from "better-sqlite3";
+import fs from "node:fs";
+import path from "node:path";
 
 // Initialize the database
 let db: Database.Database;
@@ -6,11 +8,16 @@ let db: Database.Database;
 // This function ensures we have a database connection
 function getDB() {
   if (!db) {
-    // In a real app, you'd want to store this in a proper location
-    // For this example, we'll use an in-memory database
-    // or any other path you prefer
+    // Create the data directory if it doesn't exist
+    const dataDir = path.join(process.cwd(), "data");
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
 
-    db = new Database("database.db");
+    // Use a path in the data directory for the database
+    const dbPath = path.join(dataDir, "database.db");
+
+    db = new Database(dbPath);
 
     // Initialize the database schema
     initDB();
@@ -57,7 +64,8 @@ function initDB() {
     )
   `);
 
-  // Insert sample activities
+  // Insert sample activities if needed
+  // (Your sample data code would go here)
 }
 
 export default getDB;
